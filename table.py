@@ -23,7 +23,7 @@ class Table:
         self.df = self.df.set_index('DATE (YYYY/MM/DD)', drop=True)
 
     def columns(self):
-        return self.df.columns
+        return self.df.columns.tolist()
     
     def oil_rate_sc(self):
         return self.df['Oil Rate SC (m3/day)']
@@ -41,21 +41,31 @@ class Tables():
     def set_prods(cls, lst_names):
         cls.prods = set(lst_names)
     
-    def __init__(self, prods='', injes=''):
+    def __init__(self):
         self.dic = {}        
         
     def add(self, obj_tab):
         self.dic[obj_tab.what] = obj_tab
 
     def columns(self):
-        return  next(iter(self.dic.values())).columns()
+        cols = set()
+        for key in self.dic:
+            for col in self.dic[key].columns():
+                cols.add(col)
+        return cols
 
-    def oil_rate_sc(self):   
+    def oil_rate_sc(self):           
+        return self._column_agragator('Oil Rate SC (m3/day)')
+    
+    def oil_cumu_sc(self):
+        return self._column_agragator('Cumulative Oil SC (m3)')
+
+    def _column_agragator(self, column):
         self._check_prods()
         intersection = [key for key in self.dic if key in self.prods]
         dic = {}
         for key in intersection:
-            dic[key] = self.dic[key].df['Cumulative Oil SC (m3)']
+            dic[key] = self.dic[key].df[column]
         return pd.DataFrame.from_dict(dic)        
     
     def _check_prods(self):
