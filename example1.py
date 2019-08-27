@@ -10,11 +10,12 @@ import pathlib
 import settings as sett
 from graph import Graph
 
-if __name__ == '__main__':    
-    sim_folder = 'sim_001'
-    path_to_rep_file = pathlib.Path(sett.ROOT_LOCAL / sett.MAIN_FOLDER /
-                      sim_folder / sett.REP_FILE)
-    tables = utils.get_tables(path_to_rep_file)    
-    
-    Graph.oil_rate_sc(tables.oil_rate_sc())
-    Graph.oil_cumu_sc(tables.oil_cumu_sc())    
+if __name__ == '__main__':
+    #sim_folder = 'sim_001'
+    #path_to_rep_file = pathlib.Path(sett.ROOT_LOCAL / sett.MAIN_FOLDER /
+    #                  sim_folder / sett.REP_FILE)
+    path_to_rep_file = '/home/pamonha/simulation/ref2/main.rep'
+    tables = utils.get_tables(path_to_rep_file)
+
+    #Graph.oil_rate_sc(tables.oil_rate_sc())
+    #Graph.oil_cumu_sc(tables.oil_cumu_sc())
