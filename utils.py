@@ -49,7 +49,7 @@ def to_special_table(lst):
 
     file = lst[0]
     if 'Average Reservoir Pressure' in lst[1]:
-        what = 'SARP'
+        what = 'Avg. RP'
         cols = lst[2].split('\t')
         units =  lst[3].split('\t')
         data = [raw.split('\t') for raw in lst[4:]]

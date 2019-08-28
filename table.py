@@ -6,6 +6,7 @@ Created on Sun Aug 25 14:04:55 2019
 """
 
 import pandas as pd
+import re
 
 class Table:
     dic = {}
@@ -52,23 +53,58 @@ class Tables():
         for key in self.dic:
             for col in self.dic[key].columns():
                 cols.add(col)
-        return list(cols)
+        return cols
 
     def keys(self):
         return self.dic.keys()
 
-    def oil_rate_sc(self):
-        return self._column_agragator('Oil Rate SC (m3/day)')
-
     def oil_cumu_sc(self):
-        return self._column_agragator('Cumulative Oil SC (m3)')
+        return self._column_agregator_well('Cumulative Oil SC (m3)')
 
-    def _column_agragator(self, column):
-        self._check_prods()
-        intersection = [key for key in self.dic if key in self.prods]
+    def oil_rate_sc(self):
+        return self._column_agregator_well('Oil Rate SC (m3/day)')
+
+    def oil_cutt_sc(self):
+        return self._column_agregator_well('Oil Cut SC (%)')
+
+    def gas_cumu_sc(self):
+        return self._column_agregator_well('Cumulative Gas SC (m3)')
+
+    def gas_rate_sc(self):
+        return self._column_agregator_well('Gas Rate SC (m3/day)')
+
+    def gas_oil_ratio_sc(self):
+        return self._column_agregator_well('Gas Oil Ratio SC (m3/m3)')
+
+    def wat_cumu_sc(self):
+        return self._column_agregator_well('Cumulative Water SC (m3)')
+
+    def wat_rate_sc(self):
+        return self._column_agregator_well('Water Rate SC (m3/day)')
+
+    def wat_cutt_sc(self):
+        return self._column_agregator_well('Water Cut SC (%)')
+
+    def well_bhp(self):
+        return self._column_agregator_well('Well Bottom-hole Pressure (kg/cm2)')
+
+    def well_bhpd(self):
+        return self._column_agregator_well('Well Bottom-hole Pressure (kg/cm2/day)')
+
+    def _column_agregator_well(self, column):
         dic = {}
-        for key in intersection:
+        for key in self.prods:
             dic[key] = self.dic[key].df[column]
+        return pd.DataFrame.from_dict(dic)
+
+    def _column_agregator_ctrl(self, well):
+        dic = {}
+        for key in self.dic:
+            if 'CTRL' in key:
+                for kkey in self.dic[key].df:
+                    if well in kkey:
+                        prefix = re.search(r'\w\w\w\d\d\d_',kkey).group()
+                        dic[prefix+re.sub(r'\w\w\w\d\d\d_','',kkey)] = self.dic[key].df[kkey]
         return pd.DataFrame.from_dict(dic)
 
     def _check_prods(self):

@@ -5,20 +5,39 @@ Created on Sun Aug 25 14:24:07 2019
 @author: randerson
 """
 
+import matplotlib.pyplot as plt
 
 class Graph():
     @staticmethod
-    def oil_rate_sc(df):
+    def rate_sc(df, title, y_factor):
+        df = df/y_factor
         ax = df.plot(x_compat=True)
-        ax.set_xlabel('') 
-        ax.set_ylabel('($m^3$/d)') 
-        ax.set_title('Oil Rate SC')
-        
-    @staticmethod
-    def oil_cumu_sc(df):
-        df = df/10e3
-        ax = df.plot(x_compat=True)
-        ax.set_xlabel('') 
-        ax.set_ylabel('($10^3m^3$)') 
-        ax.set_title('Cumulative Oil SC')
+        ax.set_xlabel('years')
+        ax.set_ylabel('${:.0E} m^3/d$'.format(y_factor))
+        ax.set_title(title)
 
+    @staticmethod
+    def cumu_sc(df, title, y_factor):
+        df = df/y_factor
+        ax = df.plot(x_compat=True)
+        ax.set_xlabel('years')
+        ax.set_ylabel('${:.0E} m^3$'.format(y_factor))
+        ax.set_title(title)
+
+    @staticmethod
+    def cut_sc(df, title):
+        ax = df.plot(x_compat=True)
+        ax.set_xlabel('years')
+        ax.set_ylabel('%')
+        ax.set_title(title)
+
+    @staticmethod
+    def gas_oil_ratio(df, title):
+        ax = df.plot(x_compat=True)
+        ax.set_xlabel('years')
+        ax.set_ylabel('$m^3/m^3$')
+        ax.set_title(title)
+
+    @staticmethod
+    def show():
+        plt.show()
