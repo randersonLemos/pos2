@@ -91,20 +91,53 @@ class Tables():
     def well_bhpd(self):
         return self._column_agregator_well('Well Bottom-hole Pressure (kg/cm2/day)')
 
+    def special_well(self, well):
+        df = self._column_agregator_ctrl()
+        cols = []
+        for col in df:
+            if well in col:
+                cols.append(col)
+        return df[cols]
+
+    def special_well_wcut(self, well):
+        df = self.special_well(well)
+        cols = []
+        for key in df:
+            if 'WCUT' in key:
+                cols.append(key)
+        return df[cols]
+
+    def special_well_opr(self, well):
+        df = self.special_well(well)
+        cols = []
+        for key in df:
+            if 'OPR' in key:
+                cols.append(key)
+        return df[cols]
+
+    def special_well_gor(self, well):
+        df = self.special_well(well)
+        cols = []
+        for key in df:
+            if 'GOR' in key:
+                cols.append(key)
+        return df[cols]
+
     def _column_agregator_well(self, column):
         dic = {}
         for key in self.prods:
             dic[key] = self.dic[key].df[column]
         return pd.DataFrame.from_dict(dic)
 
-    def _column_agregator_ctrl(self, well):
+    def _column_agregator_ctrl(self):
         dic = {}
         for key in self.dic:
             if 'CTRL' in key:
                 for kkey in self.dic[key].df:
-                    if well in kkey:
-                        prefix = re.search(r'\w\w\w\d\d\d_',kkey).group()
-                        dic[prefix+re.sub(r'\w\w\w\d\d\d_','',kkey)] = self.dic[key].df[kkey]
+                    result = re.search(r'\w\w\w\d\d\d',kkey)
+                    if result:
+                        well = result.group()
+                        dic['{}_{}'.format(well, re.sub(r'\w\w\w\d\d\d_','',kkey))] = self.dic[key].df[kkey]
         return pd.DataFrame.from_dict(dic)
 
     def _check_prods(self):
