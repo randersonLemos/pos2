@@ -46,12 +46,31 @@ def graphs_specials(wells):
             Graph.rate(df[ocols], well)
 
 if __name__ == '__main__':
-    #import settings as sett
-    #sim_folder = 'sim_001'
-    #path_to_rep_file = pathlib.Path(sett.ROOT_LOCAL / sett.MAIN_FOLDER /
-    #                  sim_folder / sett.REP_FILE)
-    path_to_rep_file = '/home/pamonha/simulation/ref2/main.rep'
+    import settings as sett
+    #sim_folder = 'ref2'
+    #path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
+    #reference = utils.get_tables(path_to_rep_file)
+    
+    sim_folder = 'sim_001'
+    path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
+    #path_to_rep_file = '/home/pamonha/simulation/ref2/main.rep'
     tables = utils.get_tables(path_to_rep_file)
-    graphs(['PRK014'])
-    graphs_specials(['PRK014'])
+    graphs(WELLS)
+    graphs_specials(WELLS)
     Graph.show()
+    
+    #import pandas as pd
+    #df = pd.DataFrame()
+    #for idx in range(1,51):
+    #    sim_folder = 'sim_{:03d}'.format(idx)
+    #    path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
+    #    tables = utils.get_tables(path_to_rep_file)
+    #    df['sim_{:03d}'.format(idx)] = tables.recovery_factor()['Entire Field']    
+    #df['ref'] = reference.recovery_factor()['Entire Field'] 
+    #import matplotlib.pyplot as plt
+    #fig, ax = plt.subplots()
+    #fig.suptitle('Recovery Factor')
+    #ax = df.plot(ax=ax)
+    #ax.set_title('ICV with multi-position choke opening state')
+    #ax.set_ylabel('%')
+    #ax.legend(fontsize='xx-small',loc='center left', bbox_to_anchor=(1, 0.5))

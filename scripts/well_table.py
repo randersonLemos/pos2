@@ -32,5 +32,6 @@ class Well_Table:
         self.df = pd.DataFrame(data, columns=header)
 
         self.df = self.df.apply(pd.to_numeric, errors='ignore')
-        self.df['DATE (yyyy/mm/dd)'] = self.df['DATE (yyyy/mm/dd)'].apply(pd.to_datetime, format='%Y/%m/%d', errors='ignore')
-        self.df = self.df.set_index('DATE (yyyy/mm/dd)', drop=True)
+        self.df['DATE'] = self.df['DATE (yyyy/mm/dd)'].apply(pd.to_datetime, format='%Y/%m/%d', errors='ignore')
+        self.df.drop(columns=['DATE (yyyy/mm/dd)'], inplace=True)
+        self.df = self.df.set_index('DATE', drop=True)
