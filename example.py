@@ -14,22 +14,23 @@ from scripts.table_keys import Sector_Keys
 WELLS = ['PRK014','PRK028','PRK045','PRK052','PRK060','PRK061'
          ,'PRK083','PRK084','PRK085','PWILDC']
 
-def graphs(wells):
-    Graph.rate(tables.well_column(Well_Keys.oil_rate_sc())[wells], 'Rate Oil SC')
-    #Graph.cumu(tables.well_column(Well_Keys.cum_oil_sc())[wells], 'Cum. Oil SC')
-    #Graph.ratio(tables.well_column(Well_Keys.gor_sc())[wells], 'Gas Oil Ratio SC')
-    #Graph.percent(tables.well_column(Well_Keys.wat_cut_sc())[wells], 'Water Cut')
+def graphs(tables_obj, wells):
+    tables = tables_obj
+    Graph.rate(tables.group_column_wells(Well_Keys.oil_rate_sc())[wells], 'Rate Oil SC')
+    #Graph.cumu(tables.group_column_wells(Well_Keys.cum_oil_sc())[wells], 'Cum. Oil SC')
+    Graph.ratio(tables.group_column_wells(Well_Keys.gor_sc())[wells], 'Gas Oil Ratio SC')
+    Graph.percent(tables.group_column_wells(Well_Keys.wat_cut_sc())[wells], 'Water Cut')
     #Graph.percent(tables.recovery_factor(), 'Recovery Factor')
     #Graph.pressure(tables.avg_pressure(), 'Pressure')
-    #Graph.pressure(tables.well_column(Well_Keys.well_bhp())[wells], 'BHP')
-    #Graph.dot_pressure(tables.well_column(Well_Keys.well_bhpd())[wells], 'BHPD')
+    #Graph.pressure(tables.group_column_wells(Well_Keys.well_bhp())[wells], 'BHP')
+    #Graph.dot_pressure(tables.group_column_wells(Well_Keys.well_bhpd())[wells], 'BHPD')
 
 def graphs_specials(wells):
     for well in wells:
         if well == 'PWILDC':
             pass
         else:
-            df = tables.special_well(well)
+            df = tables.group_well_specials(well)
             wcols = []
             gcols = []
             ocols = []
@@ -46,31 +47,17 @@ def graphs_specials(wells):
             Graph.rate(df[ocols], well)
 
 if __name__ == '__main__':
-    import settings as sett
+    #import settings as sett
     #sim_folder = 'ref2'
     #path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
-    #reference = utils.get_tables(path_to_rep_file)
-    
-    sim_folder = 'sim_001'
-    path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
+    path_to_rep_file = '/home/pamonha/Downloads/sims_icvs_increment/ref2/main.rep'
+    ref = utils.get_tables(path_to_rep_file)
+    ref.to_csv('csvs/sim_000')
+
+    #sim_folder = 'sim_001'
+    #path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
     #path_to_rep_file = '/home/pamonha/simulation/ref2/main.rep'
-    tables = utils.get_tables(path_to_rep_file)
-    graphs(WELLS)
-    graphs_specials(WELLS)
-    Graph.show()
-    
-    #import pandas as pd
-    #df = pd.DataFrame()
-    #for idx in range(1,51):
-    #    sim_folder = 'sim_{:03d}'.format(idx)
-    #    path_to_rep_file = sett.LOCAL_ROOT  / sett.RES_FOLD / sim_folder / sett.REP_NAME
-    #    tables = utils.get_tables(path_to_rep_file)
-    #    df['sim_{:03d}'.format(idx)] = tables.recovery_factor()['Entire Field']    
-    #df['ref'] = reference.recovery_factor()['Entire Field'] 
-    #import matplotlib.pyplot as plt
-    #fig, ax = plt.subplots()
-    #fig.suptitle('Recovery Factor')
-    #ax = df.plot(ax=ax)
-    #ax.set_title('ICV with multi-position choke opening state')
-    #ax.set_ylabel('%')
-    #ax.legend(fontsize='xx-small',loc='center left', bbox_to_anchor=(1, 0.5))
+    #tables = utils.get_tables(path_to_rep_file)
+    #graphs(WELLS)
+    #graphs_specials(WELLS)
+    #Graph.show()

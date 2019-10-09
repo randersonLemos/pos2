@@ -23,7 +23,6 @@ def is_special_table(lst):
 def is_sector_table(lst):
     return 'SECTOR' in ''.join(lst)
 
-
 def get_tables(path_to_rep_file):
     tabs = Tables()
     lst = []
