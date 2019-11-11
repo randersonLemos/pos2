@@ -99,4 +99,3 @@ class Producer_Graph:
 
     def show(self):
         Graph.show()
-

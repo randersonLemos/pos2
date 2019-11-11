@@ -23,8 +23,13 @@ if __name__ == '__main__':
     sGraph = sector_graph.Sector_Graph(ref)
 
     from inputt.scripts.infos import prods_lst
-    from post_process.scripts import well_graph
-    pGraph = well_graph.Producer_Graph(prods_lst, ref)
+    from post_process.scripts import producer_graph
+    pGraph = producer_graph.Producer_Graph(prods_lst, ref)
 
     from post_process.scripts import special_graph
     spGraph = special_graph.Special_Graph(prods_lst, ref)
+
+    from inputt.scripts.infos import injes_lst
+    from post_process.scripts import injector_graph
+
+    iGraph = injector_graph.Injector_Graph(injes_lst, ref)
