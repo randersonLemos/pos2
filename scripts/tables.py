@@ -56,8 +56,8 @@ class Tables():
         dir = pathlib.Path(dir)
         dir.mkdir(parents=True, exist_ok=True)
 
-        self.rec_fac().to_csv(dir / 'recovery_factor.csv')
-        self.avg_pre().to_csv(dir / 'avg_pressure.csv')
+        self.rec_fac().to_csv(dir / 'recovery_factor.csv', header=[Sector_Keys.recovery_factor()])
+        self.avg_pre().to_csv(dir / 'avg_pressure.csv', header=[Sector_Keys.avg_pressure()])
 
         for key in self._dic:
             if isinstance(self._dic[key], Well_Table):
