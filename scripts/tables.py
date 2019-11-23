@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sun Aug 25 14:04:55 2019
+Created on Sun Aug 24 14:04:55 2019
 
 @author: randerson
 """
 
 import re
+import copy
 import pathlib
+import warnings
 import pandas as pd
 from .well_table import Well_Table
 from .sector_table import Sector_Table
 from .special_table import Special_Table
-from .keys import Keys
-from .keys import Sector_Keys
+from dictionary.scripts.well_keys import Well_Keys
+from dictionary.scripts.sector_keys import Sector_Keys
 
 class Tables():
     def __init__(self):
@@ -24,17 +26,43 @@ class Tables():
     def get(self, key):
         return self._dic[key]
 
+    def join(self, new_key, key1, key2):
+        if type(self._dic[key1]) != type(self._dic[key2]):
+            raise TypeError('Instances are not from the same class.')
+
+        warnings.warn('For now method join accepts only objects from class Well_Table.')
+
+        df = self._dic[key1].df + self._dic[key2].df
+        df[Well_Keys.well_state()] = df[Well_Keys.well_state()].apply(lambda x: 1 if x else 0)
+        df[Well_Keys.well_bhp()] = df[Well_Keys.well_bhp()] / 2.0
+        df[Well_Keys.well_bhpd()] = df[Well_Keys.well_bhpd()] / 2.0
+
+        clone = copy.deepcopy(self._dic[key1])
+        clone.what = new_key
+        clone.df = df
+
+        return clone
+
     def keys(self):
         return self._dic.keys()
 
     def columns(self):
         return set([col for key in self._dic for col in self._dic[key].df.columns])
 
-    def rec_fac(self):
+    def field_recovery_factor(self):
         return self._dic[Sector_Keys.sector()].df[Sector_Keys.recovery_factor()].copy()
 
-    def avg_pre(self):
+    def field_average_pressure(self):
         return self._dic[Sector_Keys.sector()].df[Sector_Keys.avg_pressure()].copy()
+
+    def field_oil_production(self):
+        return self._dic[Sector_Keys.sector()].df[Sector_Keys.cum_oil_sc()].copy()
+
+    def field_gas_production(self):
+        return self._dic[Sector_Keys.sector()].df[Sector_Keys.cum_gas_sc()].copy()
+
+    def field_water_production(self):
+        return self._dic[Sector_Keys.sector()].df[Sector_Keys.cum_wat_sc()].copy()
 
     def grp_col(self, column):
         dic = {}
@@ -56,12 +84,15 @@ class Tables():
         dir = pathlib.Path(dir)
         dir.mkdir(parents=True, exist_ok=True)
 
-        self.rec_fac().to_csv(dir / 'recovery_factor.csv', header=[Sector_Keys.recovery_factor()])
-        self.avg_pre().to_csv(dir / 'avg_pressure.csv', header=[Sector_Keys.avg_pressure()])
+        self.field_recovery_factor().to_csv(dir / '{}.csv'.format(Sector_Keys.recovery_factor()), header=[Sector_Keys.recovery_factor()])
+        self.field_average_pressure().to_csv(dir / '{}.csv'.format(Sector_Keys.avg_pressure()), header=[Sector_Keys.avg_pressure()])
+        self.field_oil_production().to_csv(dir / '{}.csv'.format(Sector_Keys.cum_oil_sc()), header=[Sector_Keys.cum_oil_sc()])
+        self.field_gas_production().to_csv(dir / '{}.csv'.format(Sector_Keys.cum_gas_sc()), header=[Sector_Keys.cum_gas_sc()])
+        self.field_water_production().to_csv(dir / '{}.csv'.format(Sector_Keys.cum_wat_sc()), header=[Sector_Keys.cum_wat_sc()])
 
         for key in self._dic:
             if isinstance(self._dic[key], Well_Table):
-                    self._dic[key].df.to_csv(dir / '{}.csv'.format(key))
+                self._dic[key].df.to_csv(dir / '{}.csv'.format(key))
 
-                    df = self.grp_col_spe_well(key)
-                    df.to_csv(dir / '{}_Layers.csv'.format(key))
+                df = self.grp_col_spe_well(key)
+                df.to_csv(dir / '{}_Specials.csv'.format(key))

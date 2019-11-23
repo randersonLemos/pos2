@@ -1,11 +1,10 @@
 import pandas as pd
-from .keys import Keys
-from .keys import Well_Keys
+from dictionary.scripts.well_keys import Well_Keys
 
 class Well_Table:
     dic = {}
-    dic['DATE'] = Keys.date()
-    dic['TIME'] = Keys.time()
+    dic['DATE'] = Well_Keys.date()
+    dic['TIME'] = Well_Keys.time()
     dic['Cumulative Oil SC'] = Well_Keys.cum_oil_sc()
     dic['Cumulative Gas SC'] = Well_Keys.cum_gas_sc()
     dic['Cumulative Water SC'] = Well_Keys.cum_wat_sc()

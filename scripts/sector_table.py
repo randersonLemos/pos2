@@ -1,12 +1,11 @@
 import pandas as pd
 from itertools import zip_longest
-from .keys import Sector_Keys
-from .keys import Keys
+from dictionary.scripts.sector_keys import Sector_Keys
 
 class Sector_Table:
     dic = {}
-    dic['DATE'] = Keys.date()
-    dic['TIME'] = Keys.time()
+    dic['DATE'] = Sector_Keys.date()
+    dic['TIME'] = Sector_Keys.time()
     dic['Oil Recovery Factor SCTR'] = Sector_Keys.recovery_factor()
     dic['Water Prod Rate SCTR'] = Sector_Keys.wat_rate_sc()
     dic['Water Prod Cum SCTR'] = Sector_Keys.cum_wat_sc()

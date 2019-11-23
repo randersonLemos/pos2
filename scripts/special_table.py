@@ -1,6 +1,6 @@
 import pandas as pd
 from itertools import zip_longest
-from .keys import Keys
+from dictionary.scripts.special_keys import Special_Keys
 
 class Special_Table:
 
@@ -30,7 +30,7 @@ class Special_Table:
         self.df = self.df.set_index('Date', drop=True)
 
     def _get_cols(self, line):
-        cols = [Keys.time(),Keys.date()]
+        cols = [Special_Keys.time(),Special_Keys.date()]
         for phrase in line.split('\t'):
             cols.append('{}'.format(phrase[phrase.index('"')+1:-1]))
         return cols
