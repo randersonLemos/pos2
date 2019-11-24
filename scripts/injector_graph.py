@@ -1,5 +1,5 @@
 from .graph import Graph
-from .keys import Well_Keys
+from dictionary.scripts.well_keys import Well_Keys
 
 class Injector_Graph:
     def __init__(self, well_lst, table_obj):

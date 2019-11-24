@@ -1,5 +1,5 @@
 from .graph import Graph
-from .keys import Sector_Keys
+from dictionary.scripts.sector_keys import Sector_Keys
 
 class Sector_Graph:
     def __init__(self, table_obj):
