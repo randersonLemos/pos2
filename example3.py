@@ -11,7 +11,8 @@ if __name__ == '__main__':
 
     from config.scripts import settings as sett
 
-    path_to_sim_group = sett.REP_ROOT / 'SIM_ICV_2_STGS'
+    sim_group_folder = 'SIM_ICV_2_STGS'
+    path_to_sim_group = sett.REP_ROOT / sim_group_folder
     tables = []
     for folder in os.listdir(str(path_to_sim_group)):
         path_to_sim_folder = path_to_sim_group / folder
