@@ -16,8 +16,7 @@ if __name__ == '__main__':
     from config.scripts import settings as sett
 
     sim_group_folder = 'REFERENCE'
-    sim_group_folder = 'SIM_ICV_2_STGS'
-    sim_folder  = 'sim_016'
+    sim_folder  = 'sim_001'
     path_to_rep_file = sett.REP_ROOT / sim_group_folder / sim_folder / sett.REP_NAME
     ref = utils.get_tables(path_to_rep_file)
 

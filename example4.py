@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # SIM_ICV_2_STGS #
     ##################
 
-    sim_group_folder = 'SIM_ICV_2_STGS'
+    sim_group_folder = 'SIM_ICV_2_STGS_EXTENDED'
     path_to_eco_file = sett.ECO_ROOT / sim_group_folder / sett.ECO_NAME
 
     df = []
