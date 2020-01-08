@@ -5,12 +5,24 @@ from dictionary.scripts.special_keys import Special_Keys
 class Special_Table:
 
     def __init__(self, lst):
-        if 'CTRL WCUT' in lst[1]:
-            what = 'WCUT'
-        elif 'CTRL LR' in lst[1]:
-            what = 'OPR'
+        if 'CTRL LR' in lst[1]:
+            if 'Oil Production Rate' in lst[3]:
+                what = 'OPR'
+            elif 'Water Production Rate' in lst[3]:
+                what = 'WPR'
+        elif 'CTRL LC' in lst[1]:
+            if 'Oil Production Cum.' in lst[3]:
+                what = 'OPC'
+            elif 'Water Production Cum.' in lst[3]:
+                what = 'WPC'
+        elif 'CTRL GR' in lst[1]:
+            what = 'GPR'
+        elif 'CTRL GC' in lst[1]:
+            what = 'GPC'
+        elif 'CTRL WCUT' in lst[1]:
+            what = 'WCUT'        
         elif 'CTRL GOR' in lst[1]:
-            what = 'GOR'
+            what = 'GOR'        
 
         self.file = lst[0]
         self.what = what
