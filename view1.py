@@ -23,4 +23,7 @@ if __name__ == '__main__':
     for well in loader.inje_lst:
        ref.add(ref.join(well.name, *well.alias_lst))
        
-    from post_process import producer_graph  
+    from inputt.scripts import utils as inputt_utils
+    from post_process.scripts.producer_graph import Producer_Graph
+    pg = Producer_Graph(inputt_utils.gather_wells_names(loader.prod_lst), ref)
+    
