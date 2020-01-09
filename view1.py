@@ -15,15 +15,21 @@ if __name__ == '__main__':
 
     sim_group_folder = 'REFERENCE'
     sim_folder  = 'sim_001'
-    path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-    ref = utils.get_tables(path_to_rep_file)
+    #path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
+    tables = utils.get_tables(path_to_rep_file)
 
     from inputt import loader
-    
-    for well in loader.inje_lst:
-       ref.add(ref.join(well.name, *well.alias_lst))
-       
+
+    for well in loader.inje_lst: tables.add(tables.join(well.name, *well.alias_lst)) # Join XXXXXX-W and XXXXXX-G to XXXXXX
+
     from inputt.scripts import utils as inputt_utils
-    from post_process.scripts.producer_graph import Producer_Graph
-    pg = Producer_Graph(inputt_utils.gather_wells_names(loader.prod_lst), ref)
-    
+    from post_process.scripts.sector_graph import Sector_Graph
+    sg = Sector_Graph(tables)
+
+    from post_process.scripts.well_graph import Well_Graph
+    pg = Well_Graph(inputt_utils.gather_wells_names(loader.prod_lst), tables)
+    ig = Well_Graph(inputt_utils.gather_wells_names(loader.inje_lst), tables)
+
+    from post_process.scripts.special_graph import Special_Graph
+    spg = Special_Graph(inputt_utils.gather_wells_names(loader.prod_lst), tables)
+    sig = Special_Graph(inputt_utils.gather_wells_names(loader.inje_lst), tables)

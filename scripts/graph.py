@@ -13,26 +13,52 @@ formatter = mdates.DateFormatter('%Y')
 
 class Graph():
     @staticmethod
-    def fluid(df, title):
+    def gas(df, title):
         fig, ax = plt.subplots()
+        df = df/1000000
         df.plot(ax=ax, x_compat=True)
         plt.setp( ax.xaxis.get_majorticklabels(), rotation=90, horizontalalignment='center' )
         ax.xaxis.set_major_locator(locator)
         ax.xaxis.set_major_formatter(formatter)
         ax.set_title(title)
         ax.set_xlabel('date')
-        ax.set_ylabel('$m^3 std$')
+        ax.set_ylabel('$mmsm^3 std$')
+
+    @staticmethod
+    def gas_dot(df, title):
+        fig, ax = plt.subplots()
+        df = df/1000000
+        df.plot(ax=ax, x_compat=True)
+        plt.setp( ax.xaxis.get_majorticklabels(), rotation=90, horizontalalignment='center' )
+        ax.xaxis.set_major_locator(locator)
+        ax.xaxis.set_major_formatter(formatter)
+        ax.set_title(title)
+        ax.set_xlabel('date')
+        ax.set_ylabel('$mmsm^3/d$')
+
+    @staticmethod
+    def fluid(df, title):
+        fig, ax = plt.subplots()
+        df = df/1000
+        df.plot(ax=ax, x_compat=True)
+        plt.setp( ax.xaxis.get_majorticklabels(), rotation=90, horizontalalignment='center' )
+        ax.xaxis.set_major_locator(locator)
+        ax.xaxis.set_major_formatter(formatter)
+        ax.set_title(title)
+        ax.set_xlabel('date')
+        ax.set_ylabel('$msm^3 std$')
 
     @staticmethod
     def fluid_dot(df, title):
         fig, ax = plt.subplots()
+        df = df/1000
         df.plot(ax=ax, x_compat=True)
         plt.setp( ax.xaxis.get_majorticklabels(), rotation=90, horizontalalignment='center' )
         ax.xaxis.set_major_locator(locator)
         ax.xaxis.set_major_formatter(formatter)
         ax.set_title(title)
         ax.set_xlabel('date')
-        ax.set_ylabel('$m^3/d$')
+        ax.set_ylabel('$msm^3/d$')
 
     @staticmethod
     def fluid_ratio(df, title):

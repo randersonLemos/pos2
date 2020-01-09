@@ -1,7 +1,7 @@
 from .graph import Graph
 from dictionary.scripts.well_keys import Well_Keys
 
-class Producer_Graph:
+class Well_Graph:
     def __init__(self, well_lst, table_obj):
         self.well_lst = well_lst
         self.table_obj = table_obj
@@ -20,7 +20,7 @@ class Producer_Graph:
         Graph.fluid(self._df_oil(well_lst), 'Cumulative Oil SC')
 
     def gas(self, well_lst=[]):
-        Graph.fluid(self._df_gas(well_lst), 'Cumulative Gas SC')
+        Graph.gas(self._df_gas(well_lst), 'Cumulative Gas SC')
 
     def water(self, well_lst=[]):
         Graph.fluid(self._df_wat(well_lst), 'Cumulative Water SC')
@@ -29,7 +29,7 @@ class Producer_Graph:
         Graph.fluid_dot(self._df_oil_dot(well_lst), 'Oil Rate SC')
 
     def gas_dot(self, well_lst=[]):
-        Graph.fluid_dot(self._df_gas_dot(well_lst), 'Gas Rate SC')
+        Graph.gas_dot(self._df_gas_dot(well_lst), 'Gas Rate SC')
 
     def water_dot(self, well_lst=[]):
         Graph.fluid_dot(self._df_wat_dot(well_lst), 'Water Rate SC')

@@ -11,10 +11,12 @@ class Sector_Graph:
         Graph.fluid(self._df_wat(), 'Field Water Production')
 
     def pressure(self):
-        Graph.pressure(self.table_obj.avg_pre(), 'Field Avg. Pressure')
+        Graph.pressure(self.table_obj.\
+                field_average_pressure(), 'Field Avg. Pressure')
 
     def recovery_factor(self):
-        Graph.percent(self.table_obj.rec_fac(), 'Field Recovery Factor')
+        Graph.percent(self.table_obj.\
+                field_recovery_factor(), 'Field Recovery Factor')
 
     def _df_oil(self):
         tab = self.table_obj

@@ -6,6 +6,17 @@ class Special_Graph:
         self.well_lst = well_lst
         self.table_obj = table_obj
 
+    def opc(self, well_lst=[]):
+        tab = self.table_obj
+        if not well_lst:
+            well_lst = self.well_lst
+
+        for well in well_lst:
+            df = tab.grp_col_spe_well(well)
+            df = df.filter(like='OPC', axis=1)
+            if not df.empty:
+                Graph.fluid_dot(df, well)
+
     def opr(self, well_lst=[]):
         tab = self.table_obj
         if not well_lst:
@@ -14,6 +25,50 @@ class Special_Graph:
         for well in well_lst:
             df = tab.grp_col_spe_well(well)
             df = df.filter(like='OPR', axis=1)
+            if not df.empty:
+                Graph.fluid_dot(df, well)
+
+    def gpc(self, well_lst=[]):
+        tab = self.table_obj
+        if not well_lst:
+            well_lst = self.well_lst
+
+        for well in well_lst:
+            df = tab.grp_col_spe_well(well)
+            df = df.filter(like='GPC', axis=1)
+            if not df.empty:
+                Graph.fluid_dot(df, well)
+
+    def wpr(self, well_lst=[]):
+        tab = self.table_obj
+        if not well_lst:
+            well_lst = self.well_lst
+
+        for well in well_lst:
+            df = tab.grp_col_spe_well(well)
+            df = df.filter(like='WPR', axis=1)
+            if not df.empty:
+                Graph.fluid_dot(df, well)
+
+    def wpc(self, well_lst=[]):
+        tab = self.table_obj
+        if not well_lst:
+            well_lst = self.well_lst
+
+        for well in well_lst:
+            df = tab.grp_col_spe_well(well)
+            df = df.filter(like='WPC', axis=1)
+            if not df.empty:
+                Graph.fluid_dot(df, well)
+
+    def gpr(self, well_lst=[]):
+        tab = self.table_obj
+        if not well_lst:
+            well_lst = self.well_lst
+
+        for well in well_lst:
+            df = tab.grp_col_spe_well(well)
+            df = df.filter(like='GPR', axis=1)
             if not df.empty:
                 Graph.fluid_dot(df, well)
 
