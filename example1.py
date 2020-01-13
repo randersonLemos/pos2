@@ -20,8 +20,6 @@ if __name__ == '__main__':
     ref = utils.get_tables(path_to_rep_file)
 
     from inputt import loader
-    for well in loader.inje_lst:
-       ref.add(ref.join(well.name, *well.alias_lst))
-
-    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder
+    for well in loader.inje_lst: ref.add(ref.join(well.name, *well.alias_lst))
+    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder / sett.CSV_FOLD
     ref.to_csv(output_dir)
