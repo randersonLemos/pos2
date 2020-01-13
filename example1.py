@@ -23,5 +23,5 @@ if __name__ == '__main__':
     for well in loader.inje_lst:
        ref.add(ref.join(well.name, *well.alias_lst))
 
-    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.CSV_FOLD
+    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sett.CSV_FOLD
     ref.to_csv(output_dir)
