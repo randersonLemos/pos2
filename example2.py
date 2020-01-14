@@ -24,13 +24,21 @@ if __name__ == '__main__':
             if os.path.isdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content):
                 sim_folders.append(content)
             #elif '.eofcs.csv' in content:
+            #    os.makedirs(sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder, exist_ok=True)
             #    shutil.copyfile(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content,
-            #                       sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / content)
+                                   sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / content)
         for sim_folder in sim_folders:
-            path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-            ref = utils.get_tables(path_to_rep_file)
+            try:
+                path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
+                ref = utils.get_tables(path_to_rep_file)
+                print(path_to_rep_file)
 
-            from inputt import loader
-            for well in loader.inje_lst: ref.add(ref.join(well.name, *well.alias_lst))
-            output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder / sett.CSV_FOLD
-            ref.to_csv(output_dir)
+                from inputt import loader
+                for well in loader.inje_lst: ref.add(ref.join(well.name, *well.alias_lst))
+                #output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder
+                #output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder / sett.CSV_FOLD
+                ref.to_csv(output_dir)
+            except KeyError:
+                print("Error with rep file from:")
+                print("  ", path_to_rep_file)
+                print(str(path_to_rep_file), file=open("errors.txt", "a"))
