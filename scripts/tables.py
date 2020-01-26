@@ -26,22 +26,24 @@ class Tables():
     def get(self, key):
         return self._dic[key]
 
-    def join(self, new_key, key1, key2):
+    def dell(self, key):
+        del self._dic[key]
+
+    def join(self, key, key1, key2, dell=False):
         if type(self._dic[key1]) != type(self._dic[key2]):
             raise TypeError('Instances are not from the same class.')
-
         warnings.warn('For now method join accepts only objects from class Well_Table.')
-
         df = self._dic[key1].df + self._dic[key2].df
         df[Well_Keys.well_state()] = df[Well_Keys.well_state()].apply(lambda x: 1 if x else 0)
-        df[Well_Keys.well_bhp()] = df[Well_Keys.well_bhp()] / 2.0
-        df[Well_Keys.well_bhpd()] = df[Well_Keys.well_bhpd()] / 2.0
-
-        clone = copy.deepcopy(self._dic[key1])
-        clone.what = new_key
-        clone.df = df
-
-        return clone
+        df[Well_Keys.well_bhp()]   = df[Well_Keys.well_bhp()]  / 2.0
+        df[Well_Keys.well_bhpd()]  = df[Well_Keys.well_bhpd()] / 2.0
+        table = copy.deepcopy(self._dic[key1])
+        table.what = key
+        table.df = df
+        if dell:
+            self.dell(key1)
+            self.dell(key2)
+        return table
 
     def keys(self):
         return self._dic.keys()
@@ -80,51 +82,15 @@ class Tables():
                         dic[re.sub(r'\w\w\w\d\d\d',key,col)] = self._dic[key].df[col]
         return pd.DataFrame.from_dict(dic)
 
-    def to_csv(self, dir, tables_obj=[]):
+    def to_csv(self, dir):
         dir = pathlib.Path(dir)
         dir.mkdir(parents=True, exist_ok=True)
 
-        self.field_recovery_factor().to_csv (dir / '{}.csv'.format(Sector_Keys.recovery_factor()), header=[Sector_Keys.recovery_factor()])
-        self.field_average_pressure().to_csv(dir / '{}.csv'.format(Sector_Keys.avg_pressure()),    header=[Sector_Keys.avg_pressure()])
-        self.field_oil_production().to_csv  (dir / '{}.csv'.format(Sector_Keys.cum_oil_sc()),      header=[Sector_Keys.cum_oil_sc()])
-        self.field_gas_production().to_csv  (dir / '{}.csv'.format(Sector_Keys.cum_gas_sc()),      header=[Sector_Keys.cum_gas_sc()])
-        self.field_water_production().to_csv(dir / '{}.csv'.format(Sector_Keys.cum_wat_sc()),      header=[Sector_Keys.cum_wat_sc()])
+        self._dic[Sector_Keys.sector()].df.to_csv(dir / '{}.csv'.format('Field'))
 
         for key in self._dic:
             if isinstance(self._dic[key], Well_Table):
-                self._dic[key].df.to_csv(dir / '{}.csv'.format(key))
-                df = self.grp_col_spe_well(key)
-                df.to_csv(dir / '{}_Specials.csv'.format(key))
-
-        ### Final Values ###
-        self.field_recovery_factor().iloc[-1:].to_csv (dir / '{}_Final.csv'.format(Sector_Keys.recovery_factor()), header=[Sector_Keys.recovery_factor()])
-        self.field_average_pressure().iloc[-1:].to_csv(dir / '{}_Final.csv'.format(Sector_Keys.avg_pressure()),    header=[Sector_Keys.avg_pressure()])
-        self.field_oil_production().iloc[-1:].to_csv  (dir / '{}_Final.csv'.format(Sector_Keys.cum_oil_sc()),      header=[Sector_Keys.cum_oil_sc()])
-        self.field_gas_production().iloc[-1:].to_csv  (dir / '{}_Final.csv'.format(Sector_Keys.cum_gas_sc()),      header=[Sector_Keys.cum_gas_sc()])
-        self.field_water_production().iloc[-1:].to_csv(dir / '{}_Final.csv'.format(Sector_Keys.cum_wat_sc()),      header=[Sector_Keys.cum_wat_sc()])
-
-        for key in self._dic:
-            if isinstance(self._dic[key], Well_Table):
-                self._dic[key].df[-1:].to_csv(dir / '{}_Final.csv'.format(key))
-                df = self.grp_col_spe_well(key)
-                df[-1:].to_csv(dir / '{}_Specials_Final.csv'.format(key))
-
-        ### Ratio Values ###
-        if tables_obj:
-            (self.field_recovery_factor().iloc[-1:]  / tables_obj.field_recovery_factor().iloc[-1:]) \
-                .to_csv(dir / '{}_Ratio.csv'.format(Sector_Keys.recovery_factor()), header=[Sector_Keys.recovery_factor()])
-            (self.field_average_pressure().iloc[-1:] / tables_obj.field_average_pressure().iloc[-1:]) \
-                .to_csv(dir / '{}_Ratio.csv'.format(Sector_Keys.avg_pressure()), header=[Sector_Keys.avg_pressure()])
-            (self.field_oil_production().iloc[-1:]   / tables_obj.field_oil_production().iloc[-1:]) \
-                .to_csv(dir / '{}_Ratio.csv'.format(Sector_Keys.cum_oil_sc()), header=[Sector_Keys.cum_oil_sc()])
-            (self.field_gas_production().iloc[-1:]   / tables_obj.field_gas_production().iloc[-1:]) \
-                .to_csv(dir / '{}_Ratio.csv'.format(Sector_Keys.cum_gas_sc()), header=[Sector_Keys.cum_gas_sc()])
-            (self.field_water_production().iloc[-1:] / tables_obj.field_water_production().iloc[-1:]) \
-                .to_csv(dir / '{}_Ratio.csv'.format(Sector_Keys.cum_wat_sc()), header=[Sector_Keys.cum_wat_sc()])
-
-            for key in self._dic:
-                if isinstance(self._dic[key], Well_Table):
-                    (self._dic[key].df[-1:] / tables_obj._dic[key].df[-1:]) \
-                            .to_csv(dir / '{}_Ratio.csv'.format(key))
-                    (self.grp_col_spe_well(key)[-1:] / tables_obj.grp_col_spe_well(key)[-1:]) \
-                            .to_csv(dir / '{}_Specials_Ratio.csv'.format(key))
+                df1 = self._dic[key].df
+                df2 = self.grp_col_spe_well(key) # specials
+                df = pd.concat([df1, df2], axis=1, sort=False)
+                df.fillna(0).to_csv(dir / '{}.csv'.format(key))

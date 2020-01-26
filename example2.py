@@ -9,6 +9,7 @@ Created on Thu Aug 22 13:49:04 2019
 import os
 import shutil
 
+
 if __name__ == '__main__':
     from os import sys, path
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
@@ -23,21 +24,23 @@ if __name__ == '__main__':
         for content in os.listdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder):
             if os.path.isdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content):
                 sim_folders.append(content)
-            #elif '.eofcs.csv' in content:
-            #    os.makedirs(sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder, exist_ok=True)
-            #    shutil.copyfile(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content,
-                                   sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / content)
+            elif '.eofcs.csv' in content:
+                (sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder).mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content,
+                                   sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / 'npvs.csv')
         for sim_folder in sim_folders:
             try:
                 path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-                ref = utils.get_tables(path_to_rep_file)
+                tables = utils.get_tables(path_to_rep_file)
                 print(path_to_rep_file)
 
                 from inputt import loader
-                for well in loader.inje_lst: ref.add(ref.join(well.name, *well.alias_lst))
-                #output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder
-                #output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder / sett.CSV_FOLD
-                ref.to_csv(output_dir)
+                for well in loader.inje_lst:
+                    als1, als2 = well.alias_lst
+                    tables.add(tables.join(well.name, als1, als2, dell=True))
+                path_to_csv_folder = sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder
+                tables.to_csv(path_to_csv_folder)
+
             except KeyError:
                 print("Error with rep file from:")
                 print("  ", path_to_rep_file)

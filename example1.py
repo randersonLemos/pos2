@@ -17,9 +17,12 @@ if __name__ == '__main__':
     sim_group_folder = 'REFERENCE'
     sim_folder  = 'sim_001'
     path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-    ref = utils.get_tables(path_to_rep_file)
+    tables = utils.get_tables(path_to_rep_file)
 
     from inputt import loader
-    for well in loader.inje_lst: ref.add(ref.join(well.name, *well.alias_lst))
-    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder / sett.CSV_FOLD
-    ref.to_csv(output_dir)
+    for well in loader.inje_lst:
+        als1, als2 = well.alias_lst
+        tables.add(tables.join(well.name, als1, als2, dell=True))
+
+    path_to_csv_folder = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder
+    tables.to_csv(path_to_csv_folder)

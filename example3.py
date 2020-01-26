@@ -1,48 +1,71 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Aug 22 13:49:04 2019
-
-@author: randerson
-"""
-
-
-import os
-import shutil
+import pandas
+import pathlib
 
 if __name__ == '__main__':
     from os import sys, path
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
     import pathlib
-    from post_process.scripts import utils
+    from scripts import utils
     from config.scripts import settings as sett
 
-    sim_group_folder = 'REFERENCE_OTM'
-    sim_folder  = 'sim_001'
-    path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-    ref = utils.get_tables(path_to_rep_file)
+    #############
+    # REFERENCE #
+    #############
+    sim_group_folder = 'REFERENCE'
+    path_to_npv_file = sett.NPV_ROOT / sett.SIMS_FOLDER / sim_group_folder / sett.NPV_NAME
 
-    sim_group_folders = os.listdir(sett.REP_ROOT / sett.SIMS_FOLDER)
-    for sim_group_folder in sim_group_folders:
-        sim_folders = []
-        for content in os.listdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder):
-            if os.path.isdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content):
-                sim_folders.append(content)
-            #elif '.eofcs.csv' in content:
-            #    os.makedirs(sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder, exist_ok=True)
-            #    shutil.copyfile(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content,
-                                   sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / content)
-        for sim_folder in sim_folders:
-            try:
-                path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-                tables = utils.get_tables(path_to_rep_file)
-                print(path_to_rep_file)
-                from inputt import loader
-                for well in loader.inje_lst: ref.add(ref.join(well.name, *well.alias_lst))
-                #output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder
-                #output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder / sett.CSV_FOLD
-                tables.to_csv(output_dir, tables_obj=ref)
-            except KeyError:
-                print("Error with rep file from:")
-                print("  ", path_to_rep_file)
-                print(str(path_to_rep_file), file=open("errors.txt", "a"))
+    df = []
+    df = pandas.read_csv(path_to_npv_file, sep=';')[['MODEL', 'NPVF']]
+
+    df.index.name = 'index'
+    df.index += 1
+    df['SIM_GROUP'] = sim_group_folder
+    df['MODEL'] = df['MODEL'].str[:-5]
+    df['CATEGORY'] = '(none;none)'
+
+    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sett.NPV_NAME
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_dir, index=True)
+
+
+    #################
+    # REFERENCE_OTM #
+    #################
+    sim_group_folder = 'REFERENCE_OTM'
+    path_to_npv_file = sett.NPV_ROOT / sett.SIMS_FOLDER / sim_group_folder / sett.NPV_NAME
+
+    df = []
+    df = pandas.read_csv(path_to_npv_file, sep=';')[['MODEL', 'NPVF']]
+
+    df.index.name = 'index'
+    df.index += 1
+    df['SIM_GROUP'] = sim_group_folder
+    df['MODEL'] = df['MODEL'].str[:-5]
+    df['CATEGORY'] = '(none;none)'
+
+    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sett.NPV_NAME
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_dir, index=True)
+
+
+    ######################
+    # SIM_ICV_01_STG_EXT #
+    ######################
+    sim_group_folder = 'SIM_ICV_01_STG_EXT'
+    path_to_npv_file = sett.NPV_ROOT / sett.SIMS_FOLDER / sim_group_folder / sett.NPV_NAME
+
+    df = []
+    df = pandas.read_csv(path_to_npv_file, sep=';')[['MODEL', 'NPVF']]
+    df.index.name = 'index'
+    df.index += 1
+    df['SIM_GROUP'] = sim_group_folder
+    df['MODEL'] = df['MODEL'].str[:-5]
+
+    for idi, i in enumerate(range(250, 5250, 250)):
+        for idj, j in enumerate(range(75, 100, 5)):
+            df.loc[idi*5+idj+1, 'CATEGORY'] = '({:d};{:4.2f})'.format(i,j/100)
+
+    output_dir = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sett.NPV_NAME
+    output_dir.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(output_dir, index=True)
