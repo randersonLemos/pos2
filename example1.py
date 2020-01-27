@@ -1,9 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Aug 22 13:49:04 2019
+From .rep to .csv over one specific simulation group (sim_group_folder)
 
 @author: randerson
 """
+
+
+import os
+import shutil
 
 
 if __name__ == '__main__':
@@ -15,14 +19,28 @@ if __name__ == '__main__':
     from config.scripts import settings as sett
 
     sim_group_folder = 'REFERENCE'
-    sim_folder  = 'sim_001'
-    path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
-    tables = utils.get_tables(path_to_rep_file)
+    sim_folders = []
+    for content in os.listdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder):
+        if os.path.isdir(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content):
+            sim_folders.append(content)
+        elif '.eofcs.csv' in content:
+            (sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder).mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content,
+                               sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / 'npvs.csv')
+    for sim_folder in sim_folders:
+        try:
+            path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
+            tables = utils.get_tables(path_to_rep_file)
+            print(path_to_rep_file)
 
-    from inputt import loader
-    for well in loader.inje_lst:
-        als1, als2 = well.alias_lst
-        tables.add(tables.join(well.name, als1, als2, dell=True))
+            from inputt import loader
+            for well in loader.inje_lst:
+                als1, als2 = well.alias_lst
+                tables.add(tables.join(well.name, als1, als2, dell=True))
+            path_to_csv_folder = sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder
+            tables.to_csv(path_to_csv_folder)
 
-    path_to_csv_folder = sett.CSV_ROOT / sett.SIMS_FOLDER/ sim_group_folder / sim_folder
-    tables.to_csv(path_to_csv_folder)
+        except KeyError:
+            print("Error with rep file from:")
+            print("  ", path_to_rep_file)
+            print(str(path_to_rep_file), file=open("log.txt", "a"))

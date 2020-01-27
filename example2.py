@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Aug 22 13:49:04 2019
+From .rep to .csv over all simulation groups (sim_group_folder) organized
+under the simulation directory (SIMS_FOLDER)
 
 @author: randerson
 """
@@ -44,4 +45,4 @@ if __name__ == '__main__':
             except KeyError:
                 print("Error with rep file from:")
                 print("  ", path_to_rep_file)
-                print(str(path_to_rep_file), file=open("errors.txt", "a"))
+                print(str(path_to_rep_file), file=open("log.txt", "a"))
