@@ -28,7 +28,7 @@ if __name__ == '__main__':
             elif '.eofcs.csv' in content:
                 (sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder).mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / content,
-                                   sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / 'npvs.csv')
+                                   sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / 'Npvs.csv')
         for sim_folder in sim_folders:
             try:
                 path_to_rep_file = sett.REP_ROOT / sett.SIMS_FOLDER / sim_group_folder / sim_folder / sett.REP_NAME
