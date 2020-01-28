@@ -15,8 +15,8 @@ if __name__ == '__main__':
     sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
     import pathlib
+    from config import settings as sett
     from post_process.scripts import utils
-    from config.scripts import settings as sett
 
     sim_group_folder = 'REFERENCE'
     sim_folders = []
