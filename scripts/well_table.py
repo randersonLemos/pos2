@@ -3,6 +3,7 @@ from dictionary.scripts.well_keys import Well_Keys
 
 class Well_Table:
     dic = {}
+    dic['Well state'] = Well_Keys.well_state()
     dic['DATE'] = Well_Keys.date()
     dic['TIME'] = Well_Keys.time()
     dic['Cumulative Oil SC'] = Well_Keys.cum_oil_sc()
