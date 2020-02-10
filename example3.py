@@ -3,8 +3,8 @@ def handle_df(df_obj):
         df_obj['Sim Group'] = sim_group_folder
         df_obj['MODEL'] = df_obj['MODEL'].str[:-5]
         df_obj = df_obj.rename(columns={'MODEL': 'Sim'})
-        df_obj = df_obj.rename(columns={'NPVF': 'Npvf'})
-        df_obj['ICV Close Condition'] = 'none'
+        df_obj = df_obj.rename(columns={'NPVF': 'Npv'})
+        df_obj['Close Condition'] = 'none'
         path_to_npv_file_dest = sett.CSV_ROOT / sett.SIMS_FOLDER / sim_group_folder / 'Sims.npv'
         path_to_npv_file_dest.parent.mkdir(parents=True, exist_ok=True)
         df_obj.to_csv(path_to_npv_file_dest, index=True)
