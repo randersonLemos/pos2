@@ -10,7 +10,6 @@ from os import sys, path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 
-import pathlib
 from config import settings as sett
 from post_process.scripts import utils
 
